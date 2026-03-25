@@ -11,7 +11,7 @@ const rl = readline.createInterface({
 let usuario = '';
 let gastos = [];
 
-// ================== ARQUIVO ==================
+// Arquivo de dados
 function carregarGastos() {
   if (fs.existsSync(FILE_PATH)) {
     const data = fs.readFileSync(FILE_PATH);
@@ -23,7 +23,7 @@ function salvarGastos() {
   fs.writeFileSync(FILE_PATH, JSON.stringify(gastos, null, 2));
 }
 
-// ================== INÍCIO ==================
+// Iniciar o programa
 function iniciar() {
   carregarGastos();
 
@@ -39,7 +39,7 @@ function iniciar() {
   });
 }
 
-// ================== MENU ==================
+// Menu principal
 function mostrarMenu() {
   console.log(`\n=== Controle de Gastos de ${usuario} ===`);
   console.log('1 - Adicionar gasto');
@@ -76,7 +76,7 @@ function mostrarMenu() {
   });
 }
 
-// ================== FUNÇÕES ==================
+// Funções do menu
 function adicionarGasto() {
   rl.question('Nome do gasto: ', (nome) => {
     if (!nome.trim()) {
@@ -191,5 +191,5 @@ function listarGastosSemMenu() {
   });
 }
 
-// ================== START ==================
+// Iniciar o programa
 iniciar();
