@@ -33,7 +33,7 @@ Esta aplicação oferece uma forma simples de registrar e gerenciar gastos diret
 
 * Pessoas que desejam organizar suas finanças pessoais;
 * Estudantes;
-* Usuários que preferem ferramentas simples e leves;
+* Usuários que preferem ferramentas leves;
 * Iniciantes em controle financeiro.
 
 ---
@@ -68,13 +68,59 @@ controle-gastos-cli/
 │   └── gastos.js
 ├── tests/
 │   └── gastos.test.js
-├── package.json
-├── package-lock.json
+├── .gitignore
 ├── eslint.config.mjs
-├── gastos.json
+├── package-lock.json
+├── package.json
 └── README.md
 
+> Obs: O arquivo `gastos.json` é gerado automaticamente pela aplicação para armazenar os dados localmente e não é versionado no repositório.
+
 ---
+
+## ⚠️ Pré-requisitos
+
+Antes de executar o projeto, é necessário ter instalado em sua máquina:
+
+- Node.js (versão 18 ou superior)
+- npm (geralmente já vem com o Node.js)
+
+### ✔️ Verificar instalação
+
+```bash
+node -v
+npm -v
+```
+
+## 🌐 Instalação via navegador (web)
+
+Acesse o site oficial e baixe a versão LTS:
+
+https://nodejs.org/
+
+
+## 💻 Instalação via terminal
+
+Windows (winget)
+```bash
+winget install OpenJS.NodeJS.LTS
+```
+
+Windows (chocolatey)
+```bash
+choco install nodejs-lts
+```
+
+Linux (Ubuntu/Debian)
+```bash
+sudo apt update
+sudo apt install -y nodejs npm
+```
+
+macOS (Homebrew)
+```bash
+brew install node
+```
 
 ## 📦 Instalação
 
@@ -153,7 +199,7 @@ Seguindo o padrão **SemVer (MAJOR.MINOR.PATCH)**.
 
 ## 👨‍💻 Autor
 
-Jhonata Ferreira
+Jhonata Araujo
 
 ---
 
