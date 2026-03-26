@@ -60,6 +60,7 @@ Esta aplicação oferece uma forma simples de registrar e gerenciar gastos diret
 
 ## 📂 Estrutura do projeto
 
+```bash
 controle-gastos-cli/
 ├── .github/workflows/
 │   └── ci.yml
@@ -73,6 +74,7 @@ controle-gastos-cli/
 ├── package-lock.json
 ├── package.json
 └── README.md
+```
 
 > Obs: O arquivo `gastos.json` é gerado automaticamente pela aplicação para armazenar os dados localmente e não é versionado no repositório.
 
