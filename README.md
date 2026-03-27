@@ -126,7 +126,7 @@ macOS (Homebrew)
 brew install node
 ```
 
-## Instalação do Git
+## 🔧 Instalação do Git
 
 ```bash
 Windows (winget)
