@@ -86,12 +86,14 @@ Antes de executar o projeto, é necessário ter instalado em sua máquina:
 
 - Node.js (versão 18 ou superior)
 - npm (geralmente já vem com o Node.js)
+- Git
 
 ### ✔️ Verificar instalação
 
 ```bash
 node -v
 npm -v
+git --version
 ```
 
 ## 🌐 Instalação via navegador (web)
@@ -124,13 +126,36 @@ macOS (Homebrew)
 brew install node
 ```
 
+## Instalação do Git
+
+```bash
+Windows (winget)
+winget install Git.Git
+```
+
 ## 📦 Instalação
 
 ```bash
+## Clonar repositório
 git clone https://github.com/Jhonata334/controle-gastos-cli.git
+
+## Entrar na pasta
 cd controle-gastos-cli
+
+## Instalar dependências
 npm install
 ```
+
+---
+
+## Problema comun no Windows (PowerShell)
+
+Se aparecer erro relacionado à execução de script ao rodar o npm, execute:
+
+```bash
+Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+```
+Depois, feche e reabra o terminal.
 
 ---
 
@@ -139,6 +164,21 @@ npm install
 ```bash
 npm start
 ```
+ou se preferir
+```bash
+node src/index.js
+```
+
+---
+
+## 🚀 Primeiro uso
+
+Ao iniciar a aplicação:
+1. Informe seu nome
+2. Escolha uma opção no menu:
+  - Adicionar gasto
+  - Listar gastos
+  - Remover gasto
 
 ---
 
@@ -147,17 +187,30 @@ npm start
 ```bash
 Digite seu nome: Jhonata
 
+Bem-vindo, Jhonata!
+
+=== Controle de Gastos de Jhonata ===
 1 - Adicionar gasto
 2 - Listar gastos
-3 - Remover gasto
-
+3 - Ver total
+4 - Remover gasto
+5 - Ver maior gasto
+6 - Sair
 Escolha uma opção: 1
+Nome do gasto: Celular
+Categoria: Eletronico
+Valor: 2000
 
-Descrição: Mercado
-Valor: 150
-
-Gasto adicionado com sucesso!
+Gasto adicionado!
 ```
+
+---
+
+## 🗑️ Resetar dados
+
+Para apagar todos os dados salvos, basta excluir o arquivo:
+
+gastos.json
 
 ---
 
