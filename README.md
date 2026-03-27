@@ -135,14 +135,16 @@ winget install Git.Git
 
 ## 📦 Instalação
 
-```bash
 ## Clonar repositório
+```bash
 git clone https://github.com/Jhonata334/controle-gastos-cli.git
-
+```
 ## Entrar na pasta
+```bash
 cd controle-gastos-cli
-
+```
 ## Instalar dependências
+```bash
 npm install
 ```
 
