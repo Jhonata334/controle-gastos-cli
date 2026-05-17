@@ -8,7 +8,7 @@ Aplicação em linha de comando (CLI) desenvolvida em Node.js para auxiliar no c
 
 ## 🚀 Aplicação Publicada
 
-LINK_DO_DEPLOY
+https://github.com/Jhonata334/controle-gastos-cli
 
 ---
 
