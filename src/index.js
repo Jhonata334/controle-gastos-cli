@@ -1,5 +1,6 @@
 const readline = require('readline');
 const fs = require('fs');
+const { obterCotacaoDolar } = require('./api');
 
 const FILE_PATH = 'gastos.json';
 
@@ -48,6 +49,7 @@ function mostrarMenu() {
   console.log('4 - Remover gasto');
   console.log('5 - Ver maior gasto');
   console.log('6 - Sair');
+  console.log('7 - Ver cotação do dólar');
 
   rl.question('Escolha uma opção: ', (opcao) => {
     switch (opcao) {
@@ -68,6 +70,9 @@ function mostrarMenu() {
         break;
       case '6':
         rl.close();
+        break;
+      case '7':
+        mostrarCotacaoDolar();
         break;
       default:
         console.log('Opção inválida');
@@ -189,6 +194,20 @@ function listarGastosSemMenu() {
   gastos.forEach((g, i) => {
     console.log(`${i + 1}. ${g.nome} - R$ ${g.valor}`);
   });
+}
+
+async function mostrarCotacaoDolar() {
+  try {
+    const cotacao = await obterCotacaoDolar();
+
+    console.log(
+      `\nCotação atual do dólar: R$ ${cotacao.valor}\n`
+    );
+  } catch {
+    console.log('Erro ao consultar cotação.');
+  }
+
+  mostrarMenu();
 }
 
 // Iniciar o programa
