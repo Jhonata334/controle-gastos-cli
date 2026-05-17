@@ -6,6 +6,12 @@ Aplicação em linha de comando (CLI) desenvolvida em Node.js para auxiliar no c
 
 ---
 
+## 🚀 Aplicação Publicada
+
+LINK_DO_DEPLOY
+
+---
+
 ## 🎯 Problema
 
 Muitas pessoas enfrentam dificuldades para controlar seus gastos diários, seja por falta de ferramentas simples ou por não manterem uma rotina de registro financeiro.
@@ -45,6 +51,7 @@ Esta aplicação oferece uma forma simples de registrar e gerenciar gastos diret
 * 📋 Listagem de gastos
 * ❌ Remoção de gastos
 * 💾 Persistência de dados em JSON
+* 💱 Consulta de cotação do dólar em tempo real
 
 ---
 
@@ -55,6 +62,7 @@ Esta aplicação oferece uma forma simples de registrar e gerenciar gastos diret
 * Jest (testes automatizados)
 * ESLint (análise estática)
 * GitHub Actions (CI/CD)
+* AwesomeAPI (API pública de cotação)
 
 ---
 
@@ -229,6 +237,28 @@ npm test
 ```bash
 npm run lint
 ```
+
+---
+
+## 🔌 Integração com API Pública
+
+O sistema utiliza a AwesomeAPI para consultar a cotação atual do dólar em tempo real.
+
+API utilizada:
+https://economia.awesomeapi.com.br/json/last/USD-BRL
+
+A funcionalidade foi integrada diretamente na interface CLI, permitindo ao usuário visualizar a cotação atual do dólar.
+
+---
+
+## 🧪 Teste de Integração
+
+Foi implementado um teste automatizado para validar a comunicação da aplicação com a API externa.
+
+O teste verifica:
+- se a API responde corretamente;
+- se o campo da cotação existe;
+- se o valor retornado é válido.
 
 ---
 
