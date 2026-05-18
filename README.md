@@ -73,9 +73,11 @@ controle-gastos-cli/
 ├── .github/workflows/
 │   └── ci.yml
 ├── src/
+│   ├── api.js
 │   ├── index.js
 │   └── gastos.js
 ├── tests/
+│   ├── api.test.js 
 │   └── gastos.test.js
 ├── .gitignore
 ├── eslint.config.mjs
@@ -205,7 +207,8 @@ Bem-vindo, Jhonata!
 3 - Ver total
 4 - Remover gasto
 5 - Ver maior gasto
-6 - Sair
+6 - Ver cotação do dólar
+7 - Sair
 Escolha uma opção: 1
 Nome do gasto: Celular
 Categoria: Eletronico
