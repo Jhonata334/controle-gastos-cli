@@ -48,8 +48,8 @@ function mostrarMenu() {
   console.log('3 - Ver total');
   console.log('4 - Remover gasto');
   console.log('5 - Ver maior gasto');
-  console.log('6 - Sair');
-  console.log('7 - Ver cotação do dólar');
+  console.log('6 - Ver cotação do dólar');
+  console.log('7 - Sair');
 
   rl.question('Escolha uma opção: ', (opcao) => {
     switch (opcao) {
@@ -69,10 +69,10 @@ function mostrarMenu() {
         maiorGasto();
         break;
       case '6':
-        rl.close();
+        mostrarCotacaoDolar();
         break;
       case '7':
-        mostrarCotacaoDolar();
+        rl.close();
         break;
       default:
         console.log('Opção inválida');
