@@ -3,28 +3,30 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>💸 Controle de Gastos | Jhonata Araujo</title>
+  <title>Controle de Gastos | Jhonata Araujo</title>
   <meta name="description" content="Controle seus gastos pessoais de forma simples e eficiente. Registre, visualize e gerencie suas despesas com persistência em nuvem via Supabase." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg-primary: #0b0f1a;
-      --bg-secondary: #111827;
-      --bg-card: rgba(17, 24, 39, 0.8);
-      --accent-purple: #8b5cf6;
-      --accent-cyan: #06b6d4;
+      --bg-primary:   #0b0f1a;
+      --bg-card:      rgba(17, 24, 39, 0.85);
+      --accent-purple:#8b5cf6;
+      --accent-cyan:  #06b6d4;
       --accent-green: #10b981;
-      --accent-red: #ef4444;
+      --accent-red:   #ef4444;
       --accent-amber: #f59e0b;
       --text-primary: #f1f5f9;
-      --text-secondary: #94a3b8;
-      --border: rgba(139, 92, 246, 0.2);
-      --glass: rgba(255, 255, 255, 0.03);
+      --text-secondary:#94a3b8;
+      --border:       rgba(139, 92, 246, 0.2);
+      --glass:        rgba(255, 255, 255, 0.03);
     }
 
     html { scroll-behavior: smooth; }
@@ -40,23 +42,30 @@
     body::before {
       content: '';
       position: fixed;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(ellipse at 20% 20%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
-                  radial-gradient(ellipse at 80% 80%, rgba(6, 182, 212, 0.06) 0%, transparent 50%);
+      top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      background:
+        radial-gradient(ellipse at 20% 20%, rgba(139,92,246,0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(6,182,212,0.06) 0%, transparent 50%);
       pointer-events: none;
       z-index: 0;
     }
 
     .container {
-      max-width: 900px;
+      max-width: 920px;
       margin: 0 auto;
-      padding: 24px 20px;
+      padding: 28px 20px;
       position: relative;
       z-index: 1;
     }
+
+    /* ── Lucide icon helper ── */
+    .icon-wrap {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .icon-wrap svg { display: block; }
 
     /* ── Header ── */
     header {
@@ -68,8 +77,25 @@
       margin-bottom: 32px;
     }
 
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .header-logo {
+      width: 44px; height: 44px;
+      background: linear-gradient(135deg, var(--accent-purple), #7c3aed);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 14px rgba(139,92,246,0.4);
+      flex-shrink: 0;
+    }
+
     .header-left h1 {
-      font-size: clamp(1.4rem, 4vw, 2rem);
+      font-size: clamp(1.3rem, 4vw, 1.8rem);
       font-weight: 800;
       background: linear-gradient(135deg, #f1f5f9 0%, var(--accent-purple) 100%);
       -webkit-background-clip: text;
@@ -79,15 +105,15 @@
 
     .header-left p {
       color: var(--text-secondary);
-      font-size: 0.85rem;
-      margin-top: 4px;
+      font-size: 0.82rem;
+      margin-top: 2px;
     }
 
     .status-badge {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 6px 14px;
+      gap: 7px;
+      padding: 7px 14px;
       border-radius: 99px;
       font-size: 0.78rem;
       font-weight: 600;
@@ -95,94 +121,150 @@
     }
 
     .status-badge.connected {
-      background: rgba(16, 185, 129, 0.15);
-      border: 1px solid rgba(16, 185, 129, 0.3);
+      background: rgba(16,185,129,0.12);
+      border: 1px solid rgba(16,185,129,0.3);
       color: var(--accent-green);
     }
 
     .status-badge.disconnected {
-      background: rgba(239, 68, 68, 0.15);
-      border: 1px solid rgba(239, 68, 68, 0.3);
+      background: rgba(239,68,68,0.12);
+      border: 1px solid rgba(239,68,68,0.3);
       color: var(--accent-red);
     }
 
     .status-dot {
-      width: 7px;
-      height: 7px;
+      width: 7px; height: 7px;
       border-radius: 50%;
       background: currentColor;
       animation: pulse 2s infinite;
     }
 
     @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(0.85); }
+      0%,100% { opacity: 1; transform: scale(1); }
+      50%      { opacity: 0.4; transform: scale(0.8); }
     }
 
     /* ── Cards ── */
     .card {
       background: var(--bg-card);
       border: 1px solid var(--border);
-      border-radius: 16px;
+      border-radius: 18px;
       padding: 24px;
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      transition: border-color 0.3s, transform 0.2s;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      transition: border-color 0.3s;
     }
 
-    .card:hover { border-color: rgba(139, 92, 246, 0.4); }
+    .card:hover { border-color: rgba(139,92,246,0.38); }
 
     /* ── Summary row ── */
     .summary-row {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
       gap: 16px;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
     }
 
     .summary-card {
       background: var(--glass);
       border: 1px solid var(--border);
-      border-radius: 14px;
-      padding: 20px;
-      text-align: center;
-      transition: all 0.3s;
+      border-radius: 16px;
+      padding: 20px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: all 0.28s;
       position: relative;
       overflow: hidden;
     }
 
-    .summary-card::before {
+    .summary-card::after {
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(135deg, transparent 60%, rgba(139, 92, 246, 0.06));
+      background: linear-gradient(135deg, transparent 55%, rgba(139,92,246,0.05));
       pointer-events: none;
     }
 
-    .summary-card:hover { transform: translateY(-3px); border-color: rgba(139, 92, 246, 0.5); }
+    .summary-card:hover { transform: translateY(-3px); border-color: rgba(139,92,246,0.45); }
 
-    .summary-card .icon { font-size: 1.6rem; margin-bottom: 8px; }
+    .summary-icon {
+      width: 42px; height: 42px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
 
-    .summary-card .label {
-      font-size: 0.75rem;
+    .summary-icon.purple { background: rgba(139,92,246,0.15); color: var(--accent-purple); }
+    .summary-icon.cyan   { background: rgba(6,182,212,0.15);  color: var(--accent-cyan);   }
+    .summary-icon.green  { background: rgba(16,185,129,0.15); color: var(--accent-green);  }
+
+    .summary-text .label {
+      font-size: 0.72rem;
       color: var(--text-secondary);
       text-transform: uppercase;
       letter-spacing: 0.06em;
       font-weight: 600;
-      margin-bottom: 4px;
     }
 
-    .summary-card .value {
-      font-size: 1.5rem;
+    .summary-text .value {
+      font-size: 1.35rem;
       font-weight: 800;
       color: var(--text-primary);
+      margin-top: 2px;
     }
 
-    .summary-card .value.purple { color: var(--accent-purple); }
-    .summary-card .value.green  { color: var(--accent-green); }
-    .summary-card .value.cyan   { color: var(--accent-cyan); }
+    .summary-text .value.purple { color: var(--accent-purple); }
+    .summary-text .value.cyan   { color: var(--accent-cyan); }
+    .summary-text .value.green  { color: var(--accent-green); }
 
-    /* ── Grid layout ── */
+    /* ── Exchange card ── */
+    .exchange-card {
+      background: linear-gradient(135deg, rgba(6,182,212,0.07), rgba(139,92,246,0.07));
+      border: 1px solid rgba(6,182,212,0.22);
+      border-radius: 16px;
+      padding: 18px 22px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .exchange-icon-box {
+      width: 46px; height: 46px;
+      background: rgba(6,182,212,0.12);
+      border-radius: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent-cyan);
+      flex-shrink: 0;
+    }
+
+    .exchange-info .label {
+      font-size: 0.72rem;
+      color: var(--text-secondary);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .exchange-info .rate {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--accent-cyan);
+      line-height: 1.2;
+    }
+
+    .exchange-info .timestamp {
+      font-size: 0.68rem;
+      color: var(--text-secondary);
+      margin-top: 2px;
+    }
+
+    /* ── Main grid ── */
     .main-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -192,24 +274,37 @@
 
     @media (max-width: 640px) { .main-grid { grid-template-columns: 1fr; } }
 
-    /* ── Form ── */
+    /* ── Section title ── */
     .section-title {
-      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.82rem;
       font-weight: 700;
       color: var(--text-secondary);
       text-transform: uppercase;
       letter-spacing: 0.07em;
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      margin-bottom: 18px;
     }
 
+    .section-title .title-icon {
+      width: 28px; height: 28px;
+      background: rgba(139,92,246,0.12);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent-purple);
+    }
+
+    /* ── Form ── */
     .form-group { margin-bottom: 14px; }
 
     label {
-      display: block;
-      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.78rem;
       font-weight: 600;
       color: var(--text-secondary);
       margin-bottom: 6px;
@@ -217,20 +312,20 @@
 
     input, select {
       width: 100%;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.09);
       border-radius: 10px;
       padding: 10px 14px;
       color: var(--text-primary);
       font-family: 'Inter', sans-serif;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       transition: border-color 0.2s, box-shadow 0.2s;
       outline: none;
     }
 
     input:focus, select:focus {
       border-color: var(--accent-purple);
-      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+      box-shadow: 0 0 0 3px rgba(139,92,246,0.14);
     }
 
     select option { background: #1e293b; }
@@ -242,7 +337,7 @@
       gap: 8px;
       padding: 11px 20px;
       border: none;
-      border-radius: 10px;
+      border-radius: 11px;
       font-family: 'Inter', sans-serif;
       font-size: 0.88rem;
       font-weight: 600;
@@ -254,88 +349,58 @@
     .btn-primary {
       background: linear-gradient(135deg, var(--accent-purple), #7c3aed);
       color: #fff;
-      box-shadow: 0 4px 15px rgba(139, 92, 246, 0.35);
+      box-shadow: 0 4px 14px rgba(139,92,246,0.32);
     }
 
     .btn-primary:hover:not(:disabled) {
       transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(139, 92, 246, 0.5);
+      box-shadow: 0 6px 20px rgba(139,92,246,0.48);
     }
 
     .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
 
     .btn-danger {
-      background: rgba(239, 68, 68, 0.1);
+      background: rgba(239,68,68,0.08);
       color: var(--accent-red);
-      border: 1px solid rgba(239, 68, 68, 0.25);
-      padding: 6px 12px;
+      border: 1px solid rgba(239,68,68,0.22);
+      padding: 7px 10px;
       width: auto;
-      font-size: 0.78rem;
-      border-radius: 8px;
-    }
-
-    .btn-danger:hover { background: rgba(239, 68, 68, 0.2); }
-
-    /* ── Exchange rate widget ── */
-    .exchange-card {
-      background: linear-gradient(135deg, rgba(6, 182, 212, 0.08), rgba(139, 92, 246, 0.08));
-      border: 1px solid rgba(6, 182, 212, 0.25);
-      border-radius: 14px;
-      padding: 18px;
-      display: flex;
-      align-items: center;
-      gap: 16px;
-    }
-
-    .exchange-icon { font-size: 2rem; }
-
-    .exchange-info .label {
       font-size: 0.75rem;
-      color: var(--text-secondary);
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
+      border-radius: 9px;
     }
 
-    .exchange-info .rate {
-      font-size: 1.6rem;
-      font-weight: 800;
-      color: var(--accent-cyan);
-    }
+    .btn-danger:hover { background: rgba(239,68,68,0.18); }
 
-    .exchange-info .timestamp {
-      font-size: 0.7rem;
-      color: var(--text-secondary);
-      margin-top: 2px;
-    }
-
-    /* ── Expenses list ── */
-    .expense-list { display: flex; flex-direction: column; gap: 10px; }
+    /* ── Expense list ── */
+    .expense-list { display: flex; flex-direction: column; gap: 9px; }
 
     .expense-item {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 12px 16px;
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      border-radius: 12px;
+      padding: 12px 14px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 13px;
       gap: 12px;
       transition: all 0.2s;
-      animation: slideIn 0.3s ease;
+      animation: slideIn 0.28s ease;
     }
 
     @keyframes slideIn {
-      from { opacity: 0; transform: translateY(-10px); }
+      from { opacity: 0; transform: translateY(-8px); }
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    .expense-item:hover { border-color: rgba(139, 92, 246, 0.3); background: rgba(139, 92, 246, 0.04); }
+    .expense-item:hover {
+      border-color: rgba(139,92,246,0.28);
+      background: rgba(139,92,246,0.035);
+    }
 
     .expense-left { flex: 1; min-width: 0; }
 
     .expense-name {
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       font-weight: 600;
       color: var(--text-primary);
       white-space: nowrap;
@@ -343,20 +408,22 @@
       text-overflow: ellipsis;
     }
 
-    .expense-meta { display: flex; align-items: center; gap: 8px; margin-top: 4px; }
+    .expense-meta { display: flex; align-items: center; gap: 7px; margin-top: 4px; }
 
     .category-badge {
-      display: inline-block;
-      padding: 2px 8px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 9px;
       border-radius: 99px;
-      font-size: 0.7rem;
+      font-size: 0.68rem;
       font-weight: 600;
     }
 
     .expense-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
 
     .expense-value {
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       font-weight: 700;
       color: var(--accent-purple);
     }
@@ -364,18 +431,27 @@
     /* ── Empty state ── */
     .empty-state {
       text-align: center;
-      padding: 40px 20px;
+      padding: 36px 16px;
       color: var(--text-secondary);
     }
 
-    .empty-state .empty-icon { font-size: 3rem; margin-bottom: 12px; }
-    .empty-state p { font-size: 0.9rem; }
+    .empty-icon {
+      width: 52px; height: 52px;
+      background: rgba(139,92,246,0.1);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent-purple);
+      margin: 0 auto 14px;
+    }
 
-    /* ── Loading spinner ── */
+    .empty-state p { font-size: 0.88rem; line-height: 1.6; }
+
+    /* ── Spinner ── */
     .spinner {
       display: inline-block;
-      width: 16px;
-      height: 16px;
+      width: 16px; height: 16px;
       border: 2px solid rgba(255,255,255,0.2);
       border-top-color: #fff;
       border-radius: 50%;
@@ -387,8 +463,7 @@
     /* ── Toast ── */
     #toast-container {
       position: fixed;
-      bottom: 24px;
-      right: 24px;
+      bottom: 24px; right: 24px;
       z-index: 999;
       display: flex;
       flex-direction: column;
@@ -396,29 +471,36 @@
     }
 
     .toast {
-      padding: 12px 18px;
-      border-radius: 12px;
-      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      border-radius: 13px;
+      font-size: 0.84rem;
       font-weight: 600;
       backdrop-filter: blur(12px);
       animation: toastIn 0.3s ease, toastOut 0.3s ease 2.7s forwards;
       min-width: 220px;
     }
 
-    .toast.success { background: rgba(16, 185, 129, 0.9); color: #fff; }
-    .toast.error   { background: rgba(239, 68, 68, 0.9);  color: #fff; }
+    .toast.success { background: rgba(16,185,129,0.92); color: #fff; }
+    .toast.error   { background: rgba(239,68,68,0.92);  color: #fff; }
 
-    @keyframes toastIn  { from { opacity: 0; transform: translateX(20px); } to { opacity: 1; transform: translateX(0); } }
-    @keyframes toastOut { from { opacity: 1; } to { opacity: 0; transform: translateX(20px); } }
+    @keyframes toastIn  { from { opacity: 0; transform: translateX(16px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes toastOut { from { opacity: 1; } to { opacity: 0; transform: translateX(16px); } }
 
     /* ── Footer ── */
     footer {
       text-align: center;
-      padding: 24px 0;
+      padding: 22px 0;
       color: var(--text-secondary);
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       border-top: 1px solid rgba(255,255,255,0.06);
-      margin-top: 8px;
+      margin-top: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
     }
 
     footer a { color: var(--accent-purple); text-decoration: none; }
@@ -430,11 +512,20 @@
 <div id="toast-container"></div>
 
 <div class="container">
+
   <!-- Header -->
   <header>
     <div class="header-left">
-      <h1>💸 Controle de Gastos</h1>
-      <p>Gerencie suas finanças pessoais com facilidade</p>
+      <div class="header-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
+          fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+        </svg>
+      </div>
+      <div>
+        <h1>Controle de Gastos</h1>
+        <p>Gerencie suas finanças pessoais com facilidade</p>
+      </div>
     </div>
     <div id="db-status" class="status-badge disconnected">
       <span class="status-dot"></span>
@@ -445,25 +536,51 @@
   <!-- Summary Cards -->
   <div class="summary-row">
     <div class="summary-card">
-      <div class="icon">📊</div>
-      <div class="label">Total de Gastos</div>
-      <div class="value purple" id="total-value">R$ 0,00</div>
+      <div class="summary-icon purple">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8m-4-4v4"/>
+        </svg>
+      </div>
+      <div class="summary-text">
+        <div class="label">Total de Gastos</div>
+        <div class="value purple" id="total-value">R$ 0,00</div>
+      </div>
     </div>
     <div class="summary-card">
-      <div class="icon">📋</div>
-      <div class="label">Registros</div>
-      <div class="value cyan" id="count-value">0</div>
+      <div class="summary-icon cyan">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>
+        </svg>
+      </div>
+      <div class="summary-text">
+        <div class="label">Registros</div>
+        <div class="value cyan" id="count-value">0</div>
+      </div>
     </div>
     <div class="summary-card">
-      <div class="icon">🏆</div>
-      <div class="label">Maior Gasto</div>
-      <div class="value green" id="max-value">R$ 0,00</div>
+      <div class="summary-icon green">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>
+        </svg>
+      </div>
+      <div class="summary-text">
+        <div class="label">Maior Gasto</div>
+        <div class="value green" id="max-value">R$ 0,00</div>
+      </div>
     </div>
   </div>
 
-  <!-- Exchange Rate Widget -->
-  <div class="exchange-card" style="margin-bottom: 20px;" id="exchange-widget">
-    <div class="exchange-icon">💱</div>
+  <!-- Exchange Rate -->
+  <div class="exchange-card">
+    <div class="exchange-icon-box">
+      <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"
+        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+      </svg>
+    </div>
     <div class="exchange-info">
       <div class="label">Dólar Americano (USD → BRL)</div>
       <div class="rate" id="exchange-rate">Carregando...</div>
@@ -473,38 +590,72 @@
 
   <!-- Main Grid -->
   <div class="main-grid">
+
     <!-- Add Expense Form -->
     <div class="card">
-      <div class="section-title">➕ Adicionar Gasto</div>
+      <div class="section-title">
+        <div class="title-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
+        </div>
+        Adicionar Gasto
+      </div>
 
       <form id="add-form" onsubmit="handleAddGasto(event)">
         <div class="form-group">
-          <label for="input-nome">Nome do gasto</label>
+          <label for="input-nome">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 14.66V20a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h5.34"/>
+              <polygon points="18 2 22 6 12 16 8 16 8 12 18 2"/>
+            </svg>
+            Nome do gasto
+          </label>
           <input id="input-nome" type="text" placeholder="Ex: Mercado, Uber, Netflix..." required />
         </div>
 
         <div class="form-group">
-          <label for="input-categoria">Categoria</label>
+          <label for="input-categoria">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/>
+              <line x1="7" y1="7" x2="7.01" y2="7"/>
+            </svg>
+            Categoria
+          </label>
           <select id="input-categoria" required>
             <option value="">Selecionar categoria</option>
-            <option value="Alimentação">🍔 Alimentação</option>
-            <option value="Transporte">🚗 Transporte</option>
-            <option value="Moradia">🏠 Moradia</option>
-            <option value="Saúde">💊 Saúde</option>
-            <option value="Educação">📚 Educação</option>
-            <option value="Lazer">🎮 Lazer</option>
-            <option value="Vestuário">👕 Vestuário</option>
-            <option value="Tecnologia">💻 Tecnologia</option>
-            <option value="Outros">📦 Outros</option>
+            <option value="Alimentação">Alimentação</option>
+            <option value="Transporte">Transporte</option>
+            <option value="Moradia">Moradia</option>
+            <option value="Saúde">Saúde</option>
+            <option value="Educação">Educação</option>
+            <option value="Lazer">Lazer</option>
+            <option value="Vestuário">Vestuário</option>
+            <option value="Tecnologia">Tecnologia</option>
+            <option value="Outros">Outros</option>
           </select>
         </div>
 
         <div class="form-group">
-          <label for="input-valor">Valor (R$)</label>
+          <label for="input-valor">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="1" x2="12" y2="23"/>
+              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+            Valor (R$)
+          </label>
           <input id="input-valor" type="number" step="0.01" min="0.01" placeholder="0,00" required />
         </div>
 
         <button class="btn btn-primary" id="btn-add" type="submit">
+          <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+          </svg>
           <span id="btn-add-text">Adicionar Gasto</span>
         </button>
       </form>
@@ -512,57 +663,83 @@
 
     <!-- Expenses List -->
     <div class="card">
-      <div class="section-title">📋 Meus Gastos</div>
+      <div class="section-title">
+        <div class="title-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+            fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/>
+            <line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/>
+            <line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
+          </svg>
+        </div>
+        Meus Gastos
+      </div>
       <div class="expense-list" id="expense-list">
         <div class="empty-state">
+          <div class="empty-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+          </div>
           <div class="spinner"></div>
           <p style="margin-top:12px">Carregando gastos...</p>
         </div>
       </div>
     </div>
-  </div>
+
+  </div><!-- /main-grid -->
 
   <footer>
-    Desenvolvido por <strong>Jhonata Araujo</strong> · BootCamp II ·
+    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+      <circle cx="12" cy="7" r="4"/>
+    </svg>
+    Jhonata Araujo &nbsp;·&nbsp; BootCamp II &nbsp;·&nbsp;
     <a href="https://github.com/Jhonata334/controle-gastos-cli" target="_blank" rel="noopener">GitHub</a>
-    · Banco de dados: <strong>Supabase</strong>
+    &nbsp;·&nbsp; Supabase + Vercel
   </footer>
-</div>
+
+</div><!-- /container -->
 
 <script>
-  // ── Config ──────────────────────────────────────────
-  const SUPABASE_URL  = 'https://bcppntqcnqfnxtprmgsu.supabase.co';
-  const SUPABASE_KEY  = 'sb_publishable_YbSgY1EuMXb8X80pmehSFA_UVALNtm5';
+  // ── Config ────────────────────────────────────────────
+  const SUPABASE_URL = 'https://bcppntqcnqfnxtprmgsu.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_YbSgY1EuMXb8X80pmehSFA_UVALNtm5';
 
   const { createClient } = supabase;
   const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  // ── Category colors ──────────────────────────────────
+  // ── Category colors ────────────────────────────────────
   const CATEGORY_COLORS = {
-    'Alimentação': { bg: 'rgba(245,158,11,0.15)', color: '#f59e0b' },
-    'Transporte':  { bg: 'rgba(6,182,212,0.15)',  color: '#06b6d4' },
-    'Moradia':     { bg: 'rgba(139,92,246,0.15)', color: '#8b5cf6' },
-    'Saúde':       { bg: 'rgba(16,185,129,0.15)', color: '#10b981' },
-    'Educação':    { bg: 'rgba(59,130,246,0.15)', color: '#3b82f6' },
-    'Lazer':       { bg: 'rgba(244,63,94,0.15)',  color: '#f43f5e' },
-    'Vestuário':   { bg: 'rgba(168,85,247,0.15)', color: '#a855f7' },
-    'Tecnologia':  { bg: 'rgba(20,184,166,0.15)', color: '#14b8a6' },
-    'Outros':      { bg: 'rgba(148,163,184,0.15)',color: '#94a3b8' },
+    'Alimentação': { bg: 'rgba(245,158,11,0.14)', color: '#f59e0b' },
+    'Transporte':  { bg: 'rgba(6,182,212,0.14)',  color: '#06b6d4' },
+    'Moradia':     { bg: 'rgba(139,92,246,0.14)', color: '#8b5cf6' },
+    'Saúde':       { bg: 'rgba(16,185,129,0.14)', color: '#10b981' },
+    'Educação':    { bg: 'rgba(59,130,246,0.14)', color: '#3b82f6' },
+    'Lazer':       { bg: 'rgba(244,63,94,0.14)',  color: '#f43f5e' },
+    'Vestuário':   { bg: 'rgba(168,85,247,0.14)', color: '#a855f7' },
+    'Tecnologia':  { bg: 'rgba(20,184,166,0.14)', color: '#14b8a6' },
+    'Outros':      { bg: 'rgba(148,163,184,0.14)',color: '#94a3b8' },
   };
 
-  // ── State ─────────────────────────────────────────────
+  // ── State ──────────────────────────────────────────────
   let gastos = [];
 
-  // ── Toast ─────────────────────────────────────────────
+  // ── Toast ──────────────────────────────────────────────
   function showToast(msg, type = 'success') {
+    const iconOk  = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+    const iconErr = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`;
     const el = document.createElement('div');
     el.className = `toast ${type}`;
-    el.textContent = msg;
+    el.innerHTML = (type === 'success' ? iconOk : iconErr) + `<span>${msg}</span>`;
     document.getElementById('toast-container').appendChild(el);
     setTimeout(() => el.remove(), 3200);
   }
 
-  // ── Status badge ──────────────────────────────────────
+  // ── Status badge ───────────────────────────────────────
   function setStatus(connected) {
     const badge = document.getElementById('db-status');
     const text  = document.getElementById('status-text');
@@ -570,33 +747,39 @@
     text.textContent = connected ? 'Banco Conectado' : 'Sem Conexão';
   }
 
-  // ── Format BRL ────────────────────────────────────────
+  // ── Format BRL ─────────────────────────────────────────
   function formatBRL(value) {
     return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(Number(value));
   }
 
-  // ── Summary ───────────────────────────────────────────
+  // ── Summary ────────────────────────────────────────────
   function updateSummary() {
     const total = gastos.reduce((a, g) => a + Number(g.valor), 0);
     const max   = gastos.length ? Math.max(...gastos.map(g => Number(g.valor))) : 0;
-
     document.getElementById('total-value').textContent = formatBRL(total);
     document.getElementById('count-value').textContent = gastos.length;
     document.getElementById('max-value').textContent   = formatBRL(max);
   }
 
-  // ── Render list ───────────────────────────────────────
+  // ── Render list ────────────────────────────────────────
   function renderList() {
     const el = document.getElementById('expense-list');
 
     if (!gastos.length) {
       el.innerHTML = `
         <div class="empty-state">
-          <div class="empty-icon">📭</div>
+          <div class="empty-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+            </svg>
+          </div>
           <p>Nenhum gasto registrado.<br>Adicione seu primeiro gasto!</p>
         </div>`;
       return;
     }
+
+    const trashIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>`;
 
     el.innerHTML = gastos.map(g => {
       const c = CATEGORY_COLORS[g.categoria] || CATEGORY_COLORS['Outros'];
@@ -612,7 +795,7 @@
           </div>
           <div class="expense-right">
             <span class="expense-value">${formatBRL(g.valor)}</span>
-            <button class="btn btn-danger" onclick="handleRemove('${g.id}')">✕</button>
+            <button class="btn btn-danger" onclick="handleRemove('${g.id}')" title="Remover">${trashIcon}</button>
           </div>
         </div>`;
     }).join('');
@@ -624,27 +807,37 @@
       .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
-  // ── Load gastos ───────────────────────────────────────
+  // ── Load gastos ────────────────────────────────────────
   async function loadGastos() {
     try {
-      const { data, error } = await db.from('gastos').select('*').order('criado_em', { ascending: true });
+      const { data, error } = await db
+        .from('gastos')
+        .select('*')
+        .order('criado_em', { ascending: true });
+
       if (error) throw error;
       gastos = data || [];
       setStatus(true);
       renderList();
       updateSummary();
     } catch (err) {
-      console.error(err);
+      console.error('Erro ao carregar:', err);
       setStatus(false);
       document.getElementById('expense-list').innerHTML = `
         <div class="empty-state">
-          <div class="empty-icon">⚠️</div>
-          <p>Erro ao carregar gastos.<br>Verifique as credenciais do Supabase.</p>
+          <div class="empty-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+              <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+          </div>
+          <p>Erro ao carregar gastos.<br><small>${err.message || 'Verifique o Supabase.'}</small></p>
         </div>`;
     }
   }
 
-  // ── Add gasto ─────────────────────────────────────────
+  // ── Add gasto ──────────────────────────────────────────
   async function handleAddGasto(e) {
     e.preventDefault();
     const nome      = document.getElementById('input-nome').value.trim();
@@ -662,26 +855,33 @@
     text.innerHTML = '<span class="spinner"></span>';
 
     try {
-      const { data, error } = await db.from('gastos')
+      const { data, error } = await db
+        .from('gastos')
         .insert([{ nome, categoria, valor }])
-        .select().single();
-      if (error) throw error;
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Supabase insert error:', error);
+        throw error;
+      }
 
       gastos.push(data);
       renderList();
       updateSummary();
       document.getElementById('add-form').reset();
-      showToast('✅ Gasto adicionado com sucesso!');
+      showToast('Gasto adicionado com sucesso!');
     } catch (err) {
-      console.error(err);
-      showToast('❌ Erro ao salvar. Verifique a conexão.', 'error');
+      console.error('Erro ao inserir:', err);
+      const msg = err.message || 'Verifique a conexão.';
+      showToast('Erro ao salvar: ' + msg, 'error');
     } finally {
       btn.disabled = false;
       text.textContent = 'Adicionar Gasto';
     }
   }
 
-  // ── Remove gasto ──────────────────────────────────────
+  // ── Remove gasto ───────────────────────────────────────
   async function handleRemove(id) {
     if (!confirm('Deseja remover este gasto?')) return;
 
@@ -692,21 +892,20 @@
       gastos = gastos.filter(g => String(g.id) !== String(id));
       renderList();
       updateSummary();
-      showToast('🗑️ Gasto removido!');
+      showToast('Gasto removido!');
     } catch (err) {
       console.error(err);
-      showToast('❌ Erro ao remover.', 'error');
+      showToast('Erro ao remover.', 'error');
     }
   }
 
-  // ── Exchange rate ─────────────────────────────────────
+  // ── Exchange rate ──────────────────────────────────────
   async function loadExchangeRate() {
     try {
       const res  = await fetch('https://economia.awesomeapi.com.br/json/last/USD-BRL');
       const data = await res.json();
       const rate = parseFloat(data.USDBRL.bid).toFixed(4);
       const now  = new Date().toLocaleString('pt-BR');
-
       document.getElementById('exchange-rate').textContent = `R$ ${rate}`;
       document.getElementById('exchange-time').textContent = `Atualizado: ${now}`;
     } catch {
@@ -714,10 +913,10 @@
     }
   }
 
-  // ── Init ──────────────────────────────────────────────
+  // ── Init ───────────────────────────────────────────────
   loadGastos();
   loadExchangeRate();
-  setInterval(loadExchangeRate, 60000); // refresh a cada minuto
+  setInterval(loadExchangeRate, 60000);
 </script>
 </body>
 </html>
