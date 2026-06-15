@@ -1,8 +1,6 @@
 const readline = require('readline');
-const fs = require('fs');
 const { obterCotacaoDolar } = require('./api');
-
-const FILE_PATH = 'gastos.json';
+const db = require('./db');
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -12,21 +10,19 @@ const rl = readline.createInterface({
 let usuario = '';
 let gastos = [];
 
-// Arquivo de dados
-function carregarGastos() {
-  if (fs.existsSync(FILE_PATH)) {
-    const data = fs.readFileSync(FILE_PATH);
-    gastos = JSON.parse(data);
+// Carregar gastos do banco de dados
+async function carregarGastos() {
+  try {
+    gastos = await db.buscarGastos();
+  } catch {
+    console.log('Aviso: sem conexão com o banco. Operando com dados locais.');
+    gastos = [];
   }
 }
 
-function salvarGastos() {
-  fs.writeFileSync(FILE_PATH, JSON.stringify(gastos, null, 2));
-}
-
 // Iniciar o programa
-function iniciar() {
-  carregarGastos();
+async function iniciar() {
+  await carregarGastos();
 
   rl.question('Digite seu nome: ', (nome) => {
     if (!nome.trim()) {
@@ -90,7 +86,7 @@ function adicionarGasto() {
     }
 
     rl.question('Categoria: ', (categoria) => {
-      rl.question('Valor: ', (valor) => {
+      rl.question('Valor: ', async (valor) => {
         const valorNumero = Number(valor);
 
         if (isNaN(valorNumero) || valorNumero <= 0) {
@@ -98,17 +94,15 @@ function adicionarGasto() {
           return mostrarMenu();
         }
 
-        const novoGasto = {
-          id: Date.now(),
-          nome,
-          categoria,
-          valor: valorNumero
-        };
+        try {
+          const novoGasto = await db.inserirGasto(nome.trim(), categoria.trim(), valorNumero);
+          gastos.push(novoGasto);
+          console.log('Gasto adicionado!');
+        } catch {
+          console.log('Erro ao salvar no banco. Adicionando localmente.');
+          gastos.push({ id: Date.now(), nome: nome.trim(), categoria: categoria.trim(), valor: valorNumero });
+        }
 
-        gastos.push(novoGasto);
-        salvarGastos();
-
-        console.log('Gasto adicionado!');
         mostrarMenu();
       });
     });
@@ -123,7 +117,7 @@ function listarGastos() {
   } else {
     gastos.forEach((g, i) => {
       console.log(
-        `${i + 1}. ${g.nome} | ${g.categoria} | R$ ${g.valor}`
+        `${i + 1}. ${g.nome} | ${g.categoria} | R$ ${Number(g.valor).toFixed(2)}`
       );
     });
   }
@@ -132,8 +126,8 @@ function listarGastos() {
 }
 
 function calcularTotal() {
-  const total = gastos.reduce((acc, g) => acc + g.valor, 0);
-  console.log(`Total: R$ ${total}`);
+  const total = gastos.reduce((acc, g) => acc + Number(g.valor), 0);
+  console.log(`Total: R$ ${total.toFixed(2)}`);
   mostrarMenu();
 }
 
@@ -144,17 +138,17 @@ function maiorGasto() {
   }
 
   const maior = gastos.reduce((prev, atual) =>
-    atual.valor > prev.valor ? atual : prev
+    Number(atual.valor) > Number(prev.valor) ? atual : prev
   );
 
   console.log(
-    `Maior gasto: ${maior.nome} (${maior.categoria}) - R$ ${maior.valor}`
+    `Maior gasto: ${maior.nome} (${maior.categoria}) - R$ ${Number(maior.valor).toFixed(2)}`
   );
 
   mostrarMenu();
 }
 
-function removerGasto() {
+async function removerGasto() {
   if (gastos.length === 0) {
     console.log('Não há gastos para remover.');
     return mostrarMenu();
@@ -162,7 +156,7 @@ function removerGasto() {
 
   listarGastosSemMenu();
 
-  rl.question('Digite o número do gasto: ', (num) => {
+  rl.question('Digite o número do gasto: ', async (num) => {
     const index = Number(num) - 1;
 
     if (index < 0 || index >= gastos.length) {
@@ -174,11 +168,15 @@ function removerGasto() {
 
     rl.question(
       `Tem certeza que deseja remover "${gasto.nome}"? (s/n): `,
-      (resp) => {
+      async (resp) => {
         if (resp.toLowerCase() === 's') {
-          gastos.splice(index, 1);
-          salvarGastos();
-          console.log('Gasto removido!');
+          try {
+            await db.deletarGasto(gasto.id);
+            gastos.splice(index, 1);
+            console.log('Gasto removido!');
+          } catch {
+            console.log('Erro ao remover do banco.');
+          }
         } else {
           console.log('Operação cancelada.');
         }
@@ -192,7 +190,7 @@ function removerGasto() {
 function listarGastosSemMenu() {
   console.log('\nLista de gastos:');
   gastos.forEach((g, i) => {
-    console.log(`${i + 1}. ${g.nome} - R$ ${g.valor}`);
+    console.log(`${i + 1}. ${g.nome} - R$ ${Number(g.valor).toFixed(2)}`);
   });
 }
 
