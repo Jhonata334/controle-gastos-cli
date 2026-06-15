@@ -12,7 +12,7 @@ Aplicação **CLI + Web** para controle de gastos pessoais, desenvolvida em Node
 
 ## 🚀 Aplicação Publicada (Deploy)
 
-> **🔗 [Acesse aqui a aplicação web](VERCEL_LINK_PLACEHOLDER)**
+> **🔗 [Acesse aqui a aplicação web](https://controle-gastos-cli-bootcamp.vercel.app)**
 
 ---
 
@@ -176,7 +176,7 @@ node src/index.js
 
 Acesse o link de deploy publicado no Vercel:
 
-> **🔗 [VERCEL_LINK_PLACEHOLDER](VERCEL_LINK_PLACEHOLDER)**
+> **🔗 [controle-gastos-cli-bootcamp.vercel.app](https://controle-gastos-cli-bootcamp.vercel.app)**
 
 Ou abra o arquivo `web/index.html` localmente no navegador após configurar as credenciais.
 
@@ -285,5 +285,5 @@ Seguindo o padrão **SemVer (MAJOR.MINOR.PATCH)**:
 ## 🔗 Links
 
 - **Repositório:** https://github.com/Jhonata334/controle-gastos-cli
-- **Deploy Web:** VERCEL_LINK_PLACEHOLDER
+- **Deploy Web:** https://controle-gastos-cli-bootcamp.vercel.app
 - **Banco de dados:** [Supabase](https://supabase.com)
