@@ -1,14 +1,18 @@
-# 💸 Controle de Gastos CLI
+# 💸 Controle de Gastos
 
 ![CI](https://github.com/Jhonata334/controle-gastos-cli/actions/workflows/ci.yml/badge.svg)
+![Versão](https://img.shields.io/badge/versão-2.0.0-8b5cf6)
+![Node.js](https://img.shields.io/badge/Node.js-20+-339933?logo=nodedotjs)
+![Supabase](https://img.shields.io/badge/Supabase-PostgreSQL-3ecf8e?logo=supabase)
+![License](https://img.shields.io/badge/licença-ISC-blue)
 
-Aplicação em linha de comando (CLI) desenvolvida em Node.js para auxiliar no controle de gastos pessoais de forma simples, rápida e acessível.
+Aplicação **CLI + Web** para controle de gastos pessoais, desenvolvida em Node.js com persistência de dados em banco de dados PostgreSQL na nuvem (**Supabase**) e interface web publicada no Vercel.
 
 ---
 
-## 🚀 Aplicação Publicada
+## 🚀 Aplicação Publicada (Deploy)
 
-https://github.com/Jhonata334/controle-gastos-cli
+> **🔗 [Acesse aqui a aplicação web](VERCEL_LINK_PLACEHOLDER)**
 
 ---
 
@@ -26,12 +30,10 @@ Essa falta de controle pode gerar:
 
 ## 💡 Solução
 
-Esta aplicação oferece uma forma simples de registrar e gerenciar gastos diretamente pelo terminal, permitindo ao usuário:
+Esta aplicação oferece duas formas de uso:
 
-* registrar despesas rapidamente;
-* visualizar seus gastos;
-* remover registros incorretos;
-* manter um histórico básico em arquivo local.
+- **Interface Web** — acesse pelo navegador, adicione e remova gastos com visual moderno, persistência em nuvem e cotação do dólar em tempo real.
+- **Interface CLI** — use diretamente pelo terminal, com os mesmos dados sincronizados no banco de dados em nuvem.
 
 ---
 
@@ -46,23 +48,29 @@ Esta aplicação oferece uma forma simples de registrar e gerenciar gastos diret
 
 ## ⚙️ Funcionalidades
 
-* 👤 Cadastro de usuário
-* ➕ Adição de gastos
-* 📋 Listagem de gastos
-* ❌ Remoção de gastos
-* 💾 Persistência de dados em JSON
-* 💱 Consulta de cotação do dólar em tempo real
+* 👤 Cadastro de usuário (CLI)
+* ➕ Adição de gastos (CLI e Web)
+* 📋 Listagem de gastos (CLI e Web)
+* ❌ Remoção de gastos (CLI e Web)
+* 💾 Persistência de dados em banco de dados PostgreSQL (Supabase)
+* 💱 Consulta de cotação do dólar em tempo real (AwesomeAPI)
+* 📊 Painel de resumo financeiro (Web)
 
 ---
 
 ## 🛠️ Tecnologias utilizadas
 
-* Node.js
-* JavaScript
-* Jest (testes automatizados)
-* ESLint (análise estática)
-* GitHub Actions (CI/CD)
-* AwesomeAPI (API pública de cotação)
+| Camada | Tecnologia |
+|---|---|
+| Runtime | Node.js 20+ |
+| Linguagem | JavaScript (CommonJS) |
+| Banco de dados | Supabase (PostgreSQL em nuvem) |
+| Interface Web | HTML5 + CSS3 + JavaScript |
+| Deploy Web | Vercel |
+| Testes | Jest |
+| Lint | ESLint |
+| CI/CD | GitHub Actions |
+| API externa | AwesomeAPI (cotação USD-BRL) |
 
 ---
 
@@ -71,132 +79,112 @@ Esta aplicação oferece uma forma simples de registrar e gerenciar gastos diret
 ```bash
 controle-gastos-cli/
 ├── .github/workflows/
-│   └── ci.yml
+│   └── ci.yml              # Pipeline de CI com GitHub Actions
 ├── src/
-│   ├── api.js
-│   ├── index.js
-│   └── gastos.js
+│   ├── api.js              # Integração com API de cotação do dólar
+│   ├── db.js               # Módulo de acesso ao Supabase
+│   ├── gastos.js           # Lógica de negócio (regras de gastos)
+│   └── index.js            # Interface CLI (linha de comando)
 ├── tests/
-│   ├── api.test.js 
-│   └── gastos.test.js
+│   ├── api.test.js         # Teste de integração com API (mock)
+│   ├── db.test.js          # Teste de integração com banco (mock)
+│   └── gastos.test.js      # Testes unitários da lógica de gastos
+├── web/
+│   └── index.html          # Interface Web (publicada no Vercel)
 ├── .gitignore
-├── eslint.config.mjs
+├── eslint.config.mjs       # Configuração do ESLint
+├── package.json            # Dependências e scripts
 ├── package-lock.json
-├── package.json
+├── vercel.json             # Configuração de deploy no Vercel
 └── README.md
 ```
-
-> Obs: O arquivo `gastos.json` é gerado automaticamente pela aplicação para armazenar os dados localmente e não é versionado no repositório.
 
 ---
 
 ## ⚠️ Pré-requisitos
 
-Antes de executar o projeto, é necessário ter instalado em sua máquina:
+* Node.js (versão 18 ou superior)
+* npm
+* Git
+* Conta no [Supabase](https://supabase.com) (gratuita)
 
-- Node.js (versão 18 ou superior)
-- npm (geralmente já vem com o Node.js)
-- Git
+---
 
-### ✔️ Verificar instalação
+## 🗄️ Configuração do Banco de Dados (Supabase)
 
-```bash
-node -v
-npm -v
-git --version
+1. Crie um projeto gratuito em [supabase.com](https://supabase.com)
+2. Vá em **SQL Editor** e execute o seguinte SQL:
+
+```sql
+CREATE TABLE gastos (
+  id BIGSERIAL PRIMARY KEY,
+  nome TEXT NOT NULL,
+  categoria TEXT NOT NULL,
+  valor NUMERIC(10,2) NOT NULL CHECK (valor > 0),
+  criado_em TIMESTAMPTZ DEFAULT NOW()
+);
 ```
 
-## 🌐 Instalação via navegador (web)
+3. Vá em **Project Settings → API** e copie:
+   - `Project URL` → sua `SUPABASE_URL`
+   - `anon public` key → sua `SUPABASE_ANON_KEY`
 
-Acesse o site oficial e baixe a versão LTS:
-
-https://nodejs.org/
-
-
-## 💻 Instalação via terminal
-
-Windows (winget)
-```bash
-winget install OpenJS.NodeJS.LTS
-```
-
-Windows (chocolatey)
-```bash
-choco install nodejs-lts
-```
-
-Linux (Ubuntu/Debian)
-```bash
-sudo apt update
-sudo apt install -y nodejs npm
-```
-
-macOS (Homebrew)
-```bash
-brew install node
-```
-
-## 🔧 Instalação do Git
-
-```bash
-Windows (winget)
-winget install Git.Git
-```
+---
 
 ## 📦 Instalação
 
-## Clonar repositório
 ```bash
+# Clonar repositório
 git clone https://github.com/Jhonata334/controle-gastos-cli.git
-```
-## Entrar na pasta
-```bash
+
+# Entrar na pasta
 cd controle-gastos-cli
-```
-## Instalar dependências
-```bash
+
+# Instalar dependências
 npm install
 ```
 
 ---
 
-## Problema comun no Windows (PowerShell)
+## 🔑 Variáveis de Ambiente
 
-Se aparecer erro relacionado à execução de script ao rodar o npm, execute:
+Crie um arquivo `.env` na raiz do projeto:
 
-```bash
-Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+```env
+SUPABASE_URL=https://seu-projeto.supabase.co
+SUPABASE_ANON_KEY=sua-chave-anonima-aqui
 ```
-Depois, feche e reabra o terminal.
+
+> **Para a interface Web:** substitua `SUPABASE_URL_PLACEHOLDER` e `SUPABASE_ANON_KEY_PLACEHOLDER` no arquivo `web/index.html` com as suas credenciais.
 
 ---
 
-## ▶️ Execução
+## ▶️ Execução (CLI)
 
 ```bash
 npm start
 ```
-ou se preferir
+ou
+
 ```bash
 node src/index.js
 ```
 
 ---
 
-## 🚀 Primeiro uso
+## 🌐 Execução (Web)
 
-Ao iniciar a aplicação:
-1. Informe seu nome
-2. Escolha uma opção no menu:
-  - Adicionar gasto
-  - Listar gastos
-  - Remover gasto
+Acesse o link de deploy publicado no Vercel:
+
+> **🔗 [VERCEL_LINK_PLACEHOLDER](VERCEL_LINK_PLACEHOLDER)**
+
+Ou abra o arquivo `web/index.html` localmente no navegador após configurar as credenciais.
 
 ---
 
-## 💻 Exemplo de uso
+## 💻 Exemplo de uso (CLI)
 
-```bash
+```
 Digite seu nome: Jhonata
 
 Bem-vindo, Jhonata!
@@ -210,20 +198,12 @@ Bem-vindo, Jhonata!
 6 - Ver cotação do dólar
 7 - Sair
 Escolha uma opção: 1
-Nome do gasto: Celular
-Categoria: Eletronico
-Valor: 2000
+Nome do gasto: Mercado
+Categoria: Alimentação
+Valor: 250
 
 Gasto adicionado!
 ```
-
----
-
-## 🗑️ Resetar dados
-
-Para apagar todos os dados salvos, basta excluir o arquivo:
-
-gastos.json
 
 ---
 
@@ -232,6 +212,14 @@ gastos.json
 ```bash
 npm test
 ```
+
+O projeto possui **9 testes automatizados** cobrindo:
+
+| Arquivo | O que testa |
+|---|---|
+| `gastos.test.js` | Lógica de negócio: adicionar, calcular total, remover, validar entradas |
+| `api.test.js` | Integração com a API de cotação (mock) |
+| `db.test.js` | Integração com o banco de dados Supabase (mock) |
 
 ---
 
@@ -245,54 +233,57 @@ npm run lint
 
 ## 🔌 Integração com API Pública
 
-O sistema utiliza a AwesomeAPI para consultar a cotação atual do dólar em tempo real.
+O sistema utiliza a [AwesomeAPI](https://docs.awesomeapi.com.br/) para consultar a cotação atual do dólar em tempo real.
 
-API utilizada:
-https://economia.awesomeapi.com.br/json/last/USD-BRL
-
-A funcionalidade foi integrada diretamente na interface CLI, permitindo ao usuário visualizar a cotação atual do dólar.
+```
+GET https://economia.awesomeapi.com.br/json/last/USD-BRL
+```
 
 ---
 
-## 🧪 Teste de Integração
+## 🗄️ Banco de Dados em Nuvem
 
-Foi implementado um teste automatizado para validar a comunicação da aplicação com a API externa.
+A partir da versão **2.0.0**, os dados são persistidos no **Supabase** (PostgreSQL na nuvem), substituindo o armazenamento local em `gastos.json`.
 
-O teste verifica:
-- se a API responde corretamente;
-- se o campo da cotação existe;
-- se o valor retornado é válido.
+**Benefícios:**
+- Dados acessíveis de qualquer dispositivo
+- Persistência real mesmo ao fechar o terminal
+- Sincronização entre a interface CLI e a interface Web
 
 ---
 
 ## 🔄 Integração Contínua (CI)
 
-O projeto utiliza GitHub Actions para:
+O projeto usa **GitHub Actions** para validação automática a cada `push` ou `pull request`:
 
-* instalar dependências automaticamente
-* rodar lint
-* executar testes
-
-A cada push ou pull request.
+```
+✅ Instalar dependências
+✅ Rodar lint (ESLint)
+✅ Executar todos os testes (Jest)
+```
 
 ---
 
 ## 🔢 Versionamento
 
-Versão atual:
+Versão atual: **2.0.0**
 
-1.0.0
+Seguindo o padrão **SemVer (MAJOR.MINOR.PATCH)**:
 
-Seguindo o padrão **SemVer (MAJOR.MINOR.PATCH)**.
-
----
-
-## 👨‍💻 Autor
-
-Jhonata Araujo
+- `2.0.0` — Integração com banco de dados Supabase + interface web + deploy
 
 ---
 
-## 🔗 Repositório
+## 👨‍💻 Equipe
 
-https://github.com/Jhonata334/controle-gastos-cli
+| Nome | Matrícula | GitHub |
+|---|---|---|
+| Jhonata Ferreira de Araujo | 22504272 | [@Jhonata334](https://github.com/Jhonata334) |
+
+---
+
+## 🔗 Links
+
+- **Repositório:** https://github.com/Jhonata334/controle-gastos-cli
+- **Deploy Web:** VERCEL_LINK_PLACEHOLDER
+- **Banco de dados:** [Supabase](https://supabase.com)
